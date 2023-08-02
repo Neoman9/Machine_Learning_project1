@@ -115,10 +115,10 @@ class DataIngestion:
         except Exception as e :
             raise HousingException(e,sys) from e 
         
-    def __def__(self):
+    def __del__(self):
         logging.info(f"{'>>'*20}Data ingestion log complete.{'<<'*20}")
 
-        
+
         
 
 
