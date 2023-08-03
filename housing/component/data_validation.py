@@ -109,15 +109,52 @@ class DataValidation:
         try:
             validation_status = False
             
-            #Assigment validate training and testing dataset using schema file
-            #1. Number of Column
-            #2. Check the value of ocean proximity 
-            # acceptable values     <1H OCEAN
-            # INLAND
-            # ISLAND
-            # NEAR BAY
-            # NEAR OCEAN
-            #3. Check column names
+             #1. Number of Column
+            expected_numerical_columns = self.data_validation_config.schema_file_path.numerical_columns
+            expected_categorical_columns = self.data_validation_config.schema_file_path.categorical_columns
+            expected_target_column = self.data_validation_config.schema_file_path.target_column
+
+            train_df, test_df = self.get_train_and_test_df()
+            # Check if the number of columns in train_df matches the expected columns
+            if len(train_df.columns) != len(expected_numerical_columns) + len(expected_categorical_columns) + 1:
+                print("Error: Number of columns in the training dataset does not match the expected schema.")
+                return False
+            
+             # Check if the number of columns in test_df matches the expected columns
+            if len(test_df.columns) != len(expected_numerical_columns) + len(expected_categorical_columns) + 1:
+                print("Error: Number of columns in the testing dataset does not match the expected schema.")
+                return False 
+
+            # 2. Check the value of ocean proximity
+            expected_ocean_proximity_values = self.data_validation_config.schema_file_path.domain_value.get('ocean_proximity', [])
+            ocean_proximity_values_train = train_df['ocean_proximity'].unique()
+            ocean_proximity_values_test = test_df['ocean_proximity'].unique()
+
+            if not all(val in expected_ocean_proximity_values for val in ocean_proximity_values_train):
+                print("Error: Invalid ocean proximity values in the training dataset.")
+                return False
+            
+            if not all(val in expected_ocean_proximity_values for val in ocean_proximity_values_test):
+                print("Error: Invalid ocean proximity values in the testing dataset.")
+                return False
+            
+            # 3. Check column names
+            expected_columns = expected_numerical_columns + expected_categorical_columns + [expected_target_column]
+            expected_columns.sort()
+
+            train_columns = list(train_df.columns)
+            train_columns.sort()
+
+            test_columns = list(test_df.columns)
+            test_columns.sort()
+
+            if train_columns != expected_columns or test_columns != expected_columns:
+                print("Error: Column names do not match the expected schema.")
+                return False
+            
+             # If all validation checks pass, set validation_status to True
+
+
 
 
             validation_status = True
