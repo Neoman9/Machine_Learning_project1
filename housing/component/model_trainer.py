@@ -49,6 +49,13 @@ class ModelTrainer:
             logging.info(f" loading tranformed testing data set.")
             transformed_test_file_path = self.data_transformation_artifact.transformed_test_file_path
             test_array =load_numpy_array_data(file_path=transformed_test_file_path)
+
+            logging.info(f" splitting training and testing input and target feature")
+            x_train,y_train,x_test,y_test = train_array[:,:-1],train_array[:,-1],test_array[:,:-1],test_array[:,-1]
+
+            logging.info(f" Extracting model config file path")
+
+            model_config_file_path = self.model_trainer_config.model_config_file_path
             
 
         except Exception as e:
