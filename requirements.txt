@@ -1,4 +1,4 @@
-Flask 
+flask 
 gunicorn
 -e .
 pandas
@@ -8,3 +8,4 @@ numpy
 dill
 evidently
 pyYAML
+
