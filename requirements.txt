@@ -1,0 +1,12 @@
+flask 
+gunicorn
+-e .
+pandas
+scikit-learn
+pandas 
+numpy
+dill
+evidently
+
+pyYAML
+
